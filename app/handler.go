@@ -36,7 +36,7 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	url := strings.TrimSuffix(r.URL.Path[1:], urlSuffix)
 	urlHost := strings.Split(url, ".")[0]
-	if !strings.Contains(r.Referer(), urlHost) {
+	if !strings.Contains(r.Referer(), urlHost) && !strings.Contains(r.UserAgent(), "github-camo") {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
