@@ -3,11 +3,12 @@ version: '3'
 services:
   view-counter:
     build:
+      context: .
       dockerfile: Dockerfile
     environment:
       - DB_DSN=assets/storage.db
       - PORT=13004
     volumes:
-      - "./assets/:./assets/"
+      - "./assets/:/app/assets/"
     ports:
       - "13004:13004"
