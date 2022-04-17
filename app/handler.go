@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const urlSuffix = "/views.svg"
+const ext = ".svg"
 
 type handler struct {
 	repo Repository
@@ -29,13 +29,16 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !strings.HasSuffix(r.URL.Path, urlSuffix) {
+	if !strings.HasSuffix(r.URL.Path, ext) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	url := strings.TrimSuffix(r.URL.Path[1:], urlSuffix)
-	urlHost := strings.Split(url, ".")[0]
+	fullUrl := r.URL.Path[1:]
+	urlHost := strings.Split(fullUrl, ".")[0]
+	urlElems := strings.Split(fullUrl, "/")
+	url := strings.Join(urlElems[:len(urlElems)-1], "/")
+	badgeLabel := strings.TrimSuffix(urlElems[len(urlElems)-1], ext)
 	if !strings.Contains(r.Referer(), urlHost) && !strings.Contains(r.UserAgent(), "github-camo") {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -52,7 +55,7 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	buf := buildBadge("views", count)
+	buf := buildBadge(badgeLabel, count)
 	w.Header().Set("Content-Type", "image/svg+xml")
 	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0")
 	w.Header().Set("ETag", fmt.Sprintf("%x", md5.Sum(buf.Bytes())))

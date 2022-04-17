@@ -10,8 +10,8 @@ func buildBadge(label string, viewsCnt int64) *bytes.Buffer {
 	buf := bytes.Buffer{}
 	viewsCntString := beautify(viewsCnt)
 
-	labelFieldWidth := len(label) * 9
-	viewsFieldWidth := len(viewsCntString) * 14
+	labelFieldWidth := len(label)*6 + 15
+	viewsFieldWidth := len(viewsCntString)*6 + 15
 
 	canvas := svg.New(&buf)
 	canvas.Start(labelFieldWidth+viewsFieldWidth, 20)
