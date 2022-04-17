@@ -12,6 +12,8 @@ import (
 
 var urls = []string{
 	"github.com/dimaglushkov/dimaglushkov",
+	"github.com/dimaglushkov/views-counter",
+	"dimaglushkov.xyz",
 }
 
 func main() {
